@@ -104,7 +104,7 @@ class Parser
 			
 			return true
 
-		unless match then return { type: "text", text: str }
+		unless match then return [ { type: "text", text: str } ]
 
 		tree = _.map tree, (item) =>
 			if !item then return
