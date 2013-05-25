@@ -1,0 +1,22 @@
+{
+	"name": "simple-text-parser",
+	"version": "0.1.0",
+	"description": "A dead simple, customizable plain text parser.",
+	"author": "Tyler Johnson <tyler@vintyge.com>",
+	"main": "./app.js",
+	"dependencies": {
+		"underscore": "1.4.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [
+		"parse",
+		"text",
+		"plain",
+		"regex",
+		"string",
+		"simple"
+	]
+}
