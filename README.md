@@ -23,7 +23,7 @@ var Parser = require("simple-text-parser"),
 
 STP works by taking a plain text `String` and searching it for substrings and regular expressions. When a `match` is found, it is parsed out into a tree and replaced.
 
-Let's start by defining a parsing rule. Say we want to parse some text for hash tags (`#iamahastag`) and replace it with some custom html:
+Let's start by defining a parsing rule. Say we want to parse some text for hash tags (`#iamahashtag`) and replace it with some custom html:
 
 ```javascript
 // Define a rule using a regular expression
@@ -36,19 +36,19 @@ parser.addRule(/\#[\S]+/ig, function(tag) {
 Now lets parse some text and output the resulting string:
 
 ```javascript
-parser.parse("Some text #iamahastag foo bar.");
+parser.parse("Some text #iamahashtag foo bar.");
 ```
 
 becomes...
 
 ```html
-Some text <span class="tag">iamahastag</span> foo bar.
+Some text <span class="tag">iamahashtag</span> foo bar.
 ```
 
 Of course we can also parse some text into an `Object` tree for more custom handling and to retrieve the parsed data:
 
 ```javascript
-parser.toTree("Some text #iamahastag foo bar.");
+parser.toTree("Some text #iamahashtag foo bar.");
 ```
 
 outputs...
@@ -56,7 +56,7 @@ outputs...
 ```javascript
 [ { type: 'text', text: 'Some text ' },
   { type: 'text',
-    text: '<span class="tag">iamahastag</span>' },
+    text: '<span class="tag">iamahashtag</span>' },
   { type: 'text', text: ' foo bar.' } ]
 ```
 
@@ -79,14 +79,14 @@ parser.addRule(/\#[\S]+/ig, function(tag) {
 Now lets rerun `parse()` and `toTree()` on the original text. Notice that `parse()` outputs the same thing as before, but `toTree()` includes the custom meta data.
 
 ```html
-Some text <span class="tag">iamahastag</span> foo bar.
+Some text <span class="tag">iamahashtag</span> foo bar.
 ```
 
 ```javascript
 [ { type: 'text', text: 'Some text ' },
   { type: 'tag',
-    text: '<span class="tag">iamahastag</span>',
-    tag: 'iamahastag' },
+    text: '<span class="tag">iamahashtag</span>',
+    tag: 'iamahashtag' },
   { type: 'text', text: ' foo bar.' } ]
 ```
 
