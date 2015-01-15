@@ -120,7 +120,7 @@ parser.addRule(match, replace);
 ```
 
 * `match` (String, RegExp, Function) - The search to perform. If a `String`, it is searched for exactly. If `RegExp`, a simple match is performed. If `Function`, it is called with a single argument: the full string passed to `parse()`.
-* `replace` (String, Function) - Replaces the match when found. When a `String`, it is replaces exactly. `Function`s are called with matched substring as the only argument.
+* `replace` (String, Function) - Replaces the match when found. When a `String`, it is replaces exactly. `Function`s are called with matched substring as first argument. All capture groups are passed as next parameters.
 
 #### parser.addPreset()
 
