@@ -47,19 +47,19 @@ class Parser
 		match = _.some @rules, (rule) ->
 			m = rule.match
 
-			replace = (str) ->
+			replace = (str, groups) ->
 				r = rule.replace
 				v = null
 
 				switch tc r
-					when "function" then v = r str
+					when "function" then v = r groups...
 					when "string" then v = r
 					else v = str
 
 				if _.isString(v) then v = { type: "text", text: v }
 
 				return v
-			
+
 			switch tc m
 				when "string"
 					unless str.indexOf(m) > -1 then return
@@ -69,7 +69,7 @@ class Parser
 						tree.push str.substring si, i
 						tree.push replace str.substr i, m.length
 						si = i + m.length
-					
+
 					tree.push str.substr si
 
 				when "regex"
@@ -78,7 +78,7 @@ class Parser
 
 					while match?
 						tree.push str.substring i, match.index
-						tree.push replace str.substr match.index, match[0].length
+						tree.push replace str.substr(match.index, match[0].length), match
 						i = match.index + match[0].length
 
 						match = m.exec(str)
@@ -101,7 +101,7 @@ class Parser
 						si = part[0] + part[1]
 
 					tree.push str.substr si
-			
+
 			return true
 
 		unless match then return [ { type: "text", text: str } ]

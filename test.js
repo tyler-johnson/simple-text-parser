@@ -1,12 +1,14 @@
 var Parser = require("./app"),
 	p = new Parser();
 
-p.addRule(/![<>]?(?:\[.*\])?\(.*\)/gi, function(image) {
-	var m = image.match(/!([<>]?)(?:\[(.*)\])?\((.*)\)/i),
-		ret = "<img src=\"" + m[3] + "\" ";
+p.addRule("Dubstep", function(x){
+	return "Nodubstep"
+});
+p.addRule(/!([<>]?)(?:\[(.*)\])?\((.*)\)/gi, function(image, lr, alt, src) {
+		ret = "<img src=\"" + src + "\" ";
 
-	if (m[2]) ret += "alt=\"" + m[2] + "\" ";
-	if (m[1]) ret += "style=\"float: " + (m[1] == ">" ? "right" : "left") + ";\" ";
+	if (alt) ret += "alt=\"" + alt + "\" ";
+	if (lr) ret += "style=\"float: " + (lr == ">" ? "right" : "left") + ";\" ";
 
 	ret += "/>";
 	return ret;
