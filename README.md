@@ -1,12 +1,16 @@
-# Simple Text Parser
+# Simple Text Parser2
 
 This is a dead simple text parser written in Javascript. It's based around strings and regular expressions so it's highly customizable, synchronous and relatively fast.
+
+## Credits
+
+This is a fork of [Tyler Johnson's Simple Text Parser](https://github.com/tyler-johnson/simple-text-parser). Since that package wasn't maintained anymore I decided to create Simple Text Parser2. Currently Simple Text Parser2 is a drop-in replacement for Tyler Johnson's and only adds the capability of passing capture groups to rewrite functions.
 
 ## Install
 
 Requires Node.js and NPM. Simply install it into your package of choice.
 
-	npm install simple-text-parser --save
+	npm install simple-text-parser2 --save
 
 The `--save` will tell npm to add it to your `package.json`.
 
