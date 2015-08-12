@@ -19,7 +19,7 @@ The `--save` will tell npm to add it to your `package.json`.
 The STP package is a `Parser` class. Create a new object from it.
 
 ```javascript
-var Parser = require("simple-text-parser"),
+var Parser = require("simple-text-parser2"),
     parser = new Parser();
 ```
 
