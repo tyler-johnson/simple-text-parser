@@ -1,16 +1,16 @@
 {
-	"name": "simple-text-parser",
-	"version": "0.1.2",
+	"name": "simple-text-parser2",
+	"version": "2.0.0",
 	"description": "A dead simple, customizable plain text parser.",
-	"author": "Tyler Johnson <tyler@vintyge.com>",
+	"author": "Jeroen Peeters <jeroen@peetersweb.nl>",
 	"main": "./app.js",
 	"dependencies": {
 		"underscore": "1.4.4"
 	},
-	"homepage": "https://github.com/appleifreak/simple-text-parser",
+	"homepage": "https://github.com/jeroenpeeters/simple-text-parser",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/appleifreak/simple-text-parser.git"
+		"url": "git://github.com/jeroenpeeters/simple-text-parser.git"
 	},
 	"keywords": [
 		"parse",

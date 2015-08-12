@@ -1,12 +1,16 @@
-# Simple Text Parser
+# Simple Text Parser2
 
 This is a dead simple text parser written in Javascript. It's based around strings and regular expressions so it's highly customizable, synchronous and relatively fast.
+
+## Credits
+
+This is a fork of [Tyler Johnson's Simple Text Parser](https://github.com/tyler-johnson/simple-text-parser). Since that package wasn't maintained anymore I decided to create Simple Text Parser2. Currently Simple Text Parser2 is a drop-in replacement for Tyler Johnson's and only adds the capability of passing capture groups to rewrite functions.
 
 ## Install
 
 Requires Node.js and NPM. Simply install it into your package of choice.
 
-	npm install simple-text-parser --save
+	npm install simple-text-parser2 --save
 
 The `--save` will tell npm to add it to your `package.json`.
 
@@ -15,7 +19,7 @@ The `--save` will tell npm to add it to your `package.json`.
 The STP package is a `Parser` class. Create a new object from it.
 
 ```javascript
-var Parser = require("simple-text-parser"),
+var Parser = require("simple-text-parser2"),
     parser = new Parser();
 ```
 
@@ -120,7 +124,7 @@ parser.addRule(match, replace);
 ```
 
 * `match` (String, RegExp, Function) - The search to perform. If a `String`, it is searched for exactly. If `RegExp`, a simple match is performed. If `Function`, it is called with a single argument: the full string passed to `parse()`.
-* `replace` (String, Function) - Replaces the match when found. When a `String`, it is replaces exactly. `Function`s are called with matched substring as the only argument.
+* `replace` (String, Function) - Replaces the match when found. When a `String`, it is replaces exactly. `Function`s are called with matched substring as first argument. All capture groups are passed as next parameters.
 
 #### parser.addPreset()
 
