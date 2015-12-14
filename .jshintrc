@@ -1,0 +1,9 @@
+{
+	"eqnull": true,
+	"latedef": "nofunc",
+	"undef": true,
+	"unused": true,
+	"browserify": true,
+	"devel": true,
+	"esnext": true
+}

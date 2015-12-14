@@ -67,10 +67,10 @@ Of course a `type` of `text` on a tag isn't helpful when specifically trying to 
 parser.addRule(/\#[\S]+/ig, function(tag) {
 	// Get the tag minus the `#`
 	var clean_tag = tag.substr(1);
-	
+
 	// create the replacement text with surronding html tags
 	var text = "<span class=\"tag\">" + clean_tag + "</span>";
-	
+
 	// return an object describing this tag
 	return { type: "tag", text: text, tag: clean_tag };
 });
@@ -105,7 +105,7 @@ Parser.registerPreset(name, match);
 ```
 
 * `name` (String) - The string id of the preset. Also the `type`.
-* `match` (String, RegExp, Function) - The search to perform. 
+* `match` (String, RegExp, Function) - The search to perform.
 
 ### Instance Methods
 
@@ -122,7 +122,7 @@ parser.addRule(match, replace);
 * `match` (String, RegExp, Function) - The search to perform. If a `String`, it is searched for exactly. If `RegExp`, a simple match is performed. If `Function`, it is called with a single argument: the full string passed to `parse()`.
 * `replace` (String, Function) - Replaces the match when found. When a `String`, it is replaces exactly. `Function`s are called with matched substring as the only argument.
 
-#### parser.addPreset()
+#### parser.setPreset()
 
 Registers a preset rule within the instance.
 

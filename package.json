@@ -1,16 +1,13 @@
 {
 	"name": "simple-text-parser",
-	"version": "0.1.2",
+	"version": "1.0.0",
 	"description": "A dead simple, customizable plain text parser.",
-	"author": "Tyler Johnson <tyler@vintyge.com>",
-	"main": "./app.js",
-	"dependencies": {
-		"underscore": "1.4.4"
-	},
-	"homepage": "https://github.com/appleifreak/simple-text-parser",
+	"author": "Tyler Johnson <tyler@tylerjohnson.me>",
+	"main": "./stp.js",
+	"dependencies": {},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/appleifreak/simple-text-parser.git"
+		"url": "https://github.com/tyler-johnson/simple-text-parser.git"
 	},
 	"keywords": [
 		"parse",
@@ -19,5 +16,12 @@
 		"regex",
 		"string",
 		"simple"
-	]
+	],
+	"devDependencies": {
+		"babel-preset-es2015-rollup": "~1.0.0",
+		"jshint": "~2.8.0",
+		"rollup": "~0.21.2",
+		"rollup-plugin-babel": "~2.2.0",
+		"tape": "~4.2.2"
+	}
 }
