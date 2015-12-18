@@ -8,6 +8,7 @@
 		"url": "https://github.com/tyler-johnson/simple-text-parser.git"
 	},
 	"main": "./stp.js",
+	"jsnext:main": "./src/index.js",
 	"scripts": {
 		"lint": "jshint src/ test/",
 		"test": "tape test/*",
@@ -24,6 +25,7 @@
 		"rollup-plugin-babel": "~2.2.0",
 		"tape": "~4.2.2"
 	},
+	"license": "MIT",
 	"keywords": [
 		"parse",
 		"text",
