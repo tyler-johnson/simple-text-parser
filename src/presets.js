@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {ismatch} from "./utils";
 
 export var presets = {
@@ -8,7 +7,7 @@ export var presets = {
 };
 
 export function register(name, match) {
-	if (!_.isString(name) || !name) {
+	if (typeof name !== "string" || !name) {
 		throw new TypeError("Expecting non-empty string for preset name.");
 	}
 

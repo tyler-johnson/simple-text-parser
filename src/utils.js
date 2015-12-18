@@ -3,10 +3,10 @@ import * as _ from "lodash";
 let special = { regex: _.isRegExp, array: _.isArray };
 export function istype(val, types) {
 	if (_.isArray(types)) {
-		return _.some(types, (type) => {
+		return types.some((type) => {
 			return _.has(special, type) ? special[type](val) : typeof val === type;
 		});
-	} else if (_.isString(types)) {
+	} else if (typeof types === "string") {
 		return istype(val, [ types ]);
 	} else {
 		let type = typeof val;

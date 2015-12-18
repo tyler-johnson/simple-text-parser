@@ -22,10 +22,10 @@ export default class Parser {
 			replace: function(str) {
 				let ret = { type: name, value: str, text: str };
 
-				if (_.isFunction(replace)) {
+				if (typeof replace === "function") {
 					let val = replace(str);
-					if (_.isObject(val)) _.extend(ret, val);
-					else if (_.isString(val)) ret.text = val;
+					if (typeof val === "object") _.assign(ret, val);
+					else if (typeof val === "string") ret.text = val;
 				}
 
 				return ret;
@@ -37,7 +37,7 @@ export default class Parser {
 
 	toTree(str) {
 		let tree = [];
-		let match = _.some(this.rules, (rule) => {
+		let match = this.rules.some((rule) => {
 			let m = rule.match;
 
 			let replace = (str, groups) => {
@@ -58,7 +58,7 @@ export default class Parser {
 						break;
 				}
 
-				if (_.isString(v)) {
+				if (typeof v === "string") {
 					v = { type: "text", text: v };
 					if (groups) v.groups = groups.slice(0);
 				}
@@ -102,11 +102,11 @@ export default class Parser {
 				case "function":
 					rmatch = m(str);
 					si = 0;
-					if (!_.isArray(rmatch)) return;
-					if (_.filter(rmatch, _.isNumber).length === 2) rmatch = [ rmatch ];
+					if (!Array.isArray(rmatch)) return;
+					if (rmatch.filter(_.isNumber).length === 2) rmatch = [ rmatch ];
 					if (!rmatch.length) return;
 
-					_.forEach(rmatch, (part) => {
+					rmatch.forEach((part) => {
 						part = _.filter(part, _.isNumber);
 						if (_.size(part) !== 2) return;
 						if (part[0] < si) return;
@@ -125,22 +125,27 @@ export default class Parser {
 
 		if (!match) return [ { type: "text", text: str } ];
 
-		return _.reduce(tree, (t, item) => {
+		return tree.reduce((t, item) => {
 			if (item) {
-				t = t.concat(_.isString(item) ? this.toTree(item) : item);
+				t = t.concat(typeof item === "string" ? this.toTree(item) : item);
 			}
 
 			return t;
 		}, []);
 	}
 
-	parse(str) {
-		let tree = this.toTree(str);
-
-		return _.map(tree, (part) => {
-			if (_.isString(part)) return part;
-			else if (_.isObject(part)) return part.text;
+	render(str) {
+		return this.toTree(str).map((part) => {
+			if (typeof part === "string") return part;
+			else if (typeof part === "object" && part) return part.text;
+			else return "";
 		}).join("");
+	}
+
+	parse(str) {
+		console.warn(`Parser#parse() has been deprecated and will be removed in a future release. Please use Parser#render() instead.`);
+
+		return this.render(str);
 	}
 }
 

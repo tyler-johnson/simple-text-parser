@@ -3,11 +3,26 @@
 	"version": "1.0.0",
 	"description": "A dead simple, customizable plain text parser.",
 	"author": "Tyler Johnson <tyler@tylerjohnson.me>",
-	"main": "./stp.js",
-	"dependencies": {},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/tyler-johnson/simple-text-parser.git"
+	},
+	"main": "./stp.js",
+	"scripts": {
+		"lint": "jshint src/ test/",
+		"test": "tape test/*",
+		"build": "make",
+		"prepublish": "npm run lint && npm run build && npm run test"
+	},
+	"dependencies": {
+		"lodash": "~3.10.1"
+	},
+	"devDependencies": {
+		"babel-preset-es2015-rollup": "~1.0.0",
+		"jshint": "~2.8.0",
+		"rollup": "~0.21.2",
+		"rollup-plugin-babel": "~2.2.0",
+		"tape": "~4.2.2"
 	},
 	"keywords": [
 		"parse",
@@ -16,12 +31,5 @@
 		"regex",
 		"string",
 		"simple"
-	],
-	"devDependencies": {
-		"babel-preset-es2015-rollup": "~1.0.0",
-		"jshint": "~2.8.0",
-		"rollup": "~0.21.2",
-		"rollup-plugin-babel": "~2.2.0",
-		"tape": "~4.2.2"
-	}
+	]
 }
