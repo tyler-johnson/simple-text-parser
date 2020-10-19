@@ -13,8 +13,6 @@ before_install:
   # authenticate the registry
   - npm config set "@pagedip:registry" "https://npm.pkg.github.com/"
   - npm config set "//npm.pkg.github.com/:_authToken" "$GH_TOKEN"
-install:
-  - yarn
 jobs:
   include:
     - stage: release
