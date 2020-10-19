@@ -1,0 +1,29 @@
+os: linux
+dist: xenial
+language: node_js
+node_js:
+  - "12"
+env:
+  - NODE_ENV=development
+before_install:
+  # update yarn and npm
+  - npm i npm -g
+  - npm i yarn -g
+  - echo "npm $(npm -v)" && echo "yarn $(yarn -v)"
+  # authenticate the registry
+  - npm config set "@pagedip:registry" "https://npm.pkg.github.com/"
+  - npm config set "//npm.pkg.github.com/:_authToken" "$GH_TOKEN"
+install:
+  - yarn
+jobs:
+  include:
+    - stage: release
+      if: "(type = pull_request OR branch = master) AND NOT commit_message =~ /\\[autorelease\\]/"
+      script:
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then yarn test; fi
+        - npm run autorelease -- --expanded --no-skip-build
+branches:
+  only:
+    - master
+cache:
+  yarn: true
