@@ -18,10 +18,10 @@ install:
 jobs:
   include:
     - stage: release
-      if: "(type = pull_request OR branch = master) AND NOT commit_message =~ /\\[autorelease\\]/"
+      if: "type = pull_request OR branch = master"
       script:
         - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then yarn test; fi
-        - npm run autorelease -- --expanded --no-skip-build
+        - yarn autorelease --expanded
 branches:
   only:
     - master
