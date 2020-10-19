@@ -1,6 +1,6 @@
 {
   "name": "simple-text-parser",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A dead simple, customizable plain text parser.",
   "author": "Tyler Johnson <tyler@tylerjohnson.me>",
   "repository": {

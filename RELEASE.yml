@@ -1,0 +1,3 @@
+breaking:
+  - Rewritten in TypeScript. API remains largely the same.
+  - Removed the deprecated method `parse()`.
