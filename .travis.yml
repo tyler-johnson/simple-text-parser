@@ -30,7 +30,7 @@ jobs:
       node_js: 14
       script: yarn test
     - stage: release
-      script: yarn autorelease --expanded
+      script: npm run autorelease -- --expanded
 branches:
   only:
     - master
