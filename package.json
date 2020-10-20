@@ -20,7 +20,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@pagedip/tool-autorelease": "^3.9.3",
+    "@pagedip/tool-autorelease": "^3.9.2",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.10",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
@@ -48,5 +48,8 @@
     "simple",
     "render",
     "hashtag"
+  ],
+  "files": [
+    "lib"
   ]
 }
