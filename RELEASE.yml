@@ -1,4 +1,7 @@
 breaking:
 features:
+- Added renderTree static method.
+- addRule method takes a full rule object, or a 3rd argument for type.
 fixes:
+- Corrected regression in which nodes from presets did not have the correct type.
 chores:

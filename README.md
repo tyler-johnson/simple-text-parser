@@ -71,12 +71,12 @@ Of course a `type` of `text` on a tag isn't helpful when specifically trying to 
 ```javascript
 // Define a rule using a regular expression
 // RegExp capture groups are passed as extra arguments
-parser.addRule(/\#([\S]+)/gi, function (tag, clean_tag) {
+parser.addRule(/#([\S]+)/gi, function (tag, clean_tag) {
   // create the replacement text with surrounding html tags
-  var text = '<span class="tag">' + clean_tag + "</span>";
+  const html = `<span class="tag">${clean_tag}</span>`;
 
   // return a node describing this tag
-  return { type: "tag", text: text, tag: clean_tag };
+  return { type: "tag", text: html, value: clean_tag };
 });
 ```
 
@@ -92,11 +92,23 @@ Some text <span class="tag">iamahashtag</span> foo bar.
   {
     type: "tag",
     text: '<span class="tag">iamahashtag</span>',
-    tag: "iamahashtag",
+    value: "iamahashtag",
   },
   { type: "text", text: " foo bar." },
 ];
 ```
+
+Now the rule we've been using is actually already included as a preset. Presets are easy to use, they include the match side, you need to set a replace value.
+
+```javascript
+// Define a rule using a preset
+parser.addPreset("tag", function (tag, clean_tag) {
+  const html = `<span class="tag">${clean_tag}</span>`;
+  return { type: "tag", text: html, value: clean_tag };
+});
+```
+
+There are actually 3 included presets: tag, url, and email. You can also add your own presets to extend the parser globally by using `Parser.registerPreset()`.
 
 ## API Documentation
 
@@ -106,24 +118,27 @@ These methods can be called on objects returned from `new Parser()`.
 
 #### parser.addRule()
 
-Add a rule to this parser. A rule consists of a match and optionally a replace.
+Add a rule to this parser. A rule consists of a match and optionally a replace and type.
 
 ```
-addRule(match: Match, replace?: Replace): this
+addRule(match: Match, replace?: Replace, type?: string): this
+addRule(rule: Rule): this
 ```
 
 - `match` - The search to perform. If a string, it is searched for exactly. If a regular expression, a simple match is performed and any capture groups are passed to `replace`. If a function, it is called with a single argument, the full string passed to `render()`, and should return an array with an index and length of the match.
 - `replace` - Replaces the match when found. If a string, it replaces exactly. Functions are called with matched substrings and possibly any regular expression capture groups. The function should return a string to replace with or an object representing a tree node. This argument is optional and when not provided the matched content is preserved.
+- `type` - The type of the rule, which will also be the default type used in parsed tree nodes.
+- `rule` - The above arguments as an object.
 
 #### parser.addPreset()
 
 Add a registered global preset rule within this parser and give it a replace. The preset must first be registered using `Parser.registerPreset()` before it can be used with this method.
 
 ```
-addPreset(name: string, replace?: Replace): this
+addPreset(type: string, replace?: Replace): this
 ```
 
-- `name` - The string id of the preset as declared by `Parser.registerPreset()`. This will be the node's `type` when returned by `toTree()`.
+- `type` - The string id of the preset as declared by `Parser.registerPreset()`. This will be the node's `type` when returned by `toTree()`.
 - `replace` - Replaces the match when found. Same as the `replace` in `addRule()`.
 
 #### parser.toTree()
@@ -155,8 +170,18 @@ These methods can be called from the `Parser` class.
 Register a new global preset rule. Presets don't handle the replacing, only the matching. There are three pre-included presets: `tag`, `url`, and `email`.
 
 ```
-static registerPreset(name: string, match: Match): void
+static registerPreset(type: string, match: Match): void
 ```
 
 - `name` - The string id of the preset. This will become the node's `type` when returned by `toTree()`.
 - `match` - The search to perform. Same as the `replace` in `addRule()`.
+
+#### Parser.renderTree()
+
+Rasterize an array of nodes into a string by concatenating all their `text` properties. Used internally by `render()`.
+
+```
+static renderTree(tree: Node[]): string
+```
+
+- `tree` - Array of node objects, usually what is returned by `toTree()`.
