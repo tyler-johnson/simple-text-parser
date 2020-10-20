@@ -6,6 +6,12 @@ export interface Node {
   [key: string]: unknown;
 }
 
+export namespace Node {
+  export function is(r: any): r is Node {
+    return r != null && typeof r.type === "string" && typeof r.text === "string";
+  }
+}
+
 export type Match = string | RegExp | Match.Location | Match.Location[] | Match.Function;
 
 export namespace Match {
@@ -28,7 +34,7 @@ export namespace Match {
 export type Replace = string | Replace.Function;
 
 export namespace Replace {
-  export type Function = (match: string, ...groups: string[]) => Node | string;
+  export type Function = (match: string, ...groups: string[]) => Partial<Node> | string;
 
   export function is(val: any): val is Replace {
     return typeof val === "string" || typeof val === "function";
@@ -37,7 +43,20 @@ export namespace Replace {
 
 export interface Rule {
   match: Match;
+  type?: string;
   replace?: Replace;
+}
+
+export namespace Rule {
+  export function is(r: any): r is Rule {
+    return (
+      r != null &&
+      Match.is(r.match) &&
+      (r.type == null || typeof r.type === "string") &&
+      (r.replace == null || Replace.is(r.replace)) &&
+      typeof r !== "string" // b/c holy cow a string actually fits the rule type
+    );
+  }
 }
 
 export class Parser {
@@ -57,22 +76,31 @@ export class Parser {
    * Register a new global preset rule. Presets don't handle the replacing, only the matching. There are three
    * pre-included presets: `tag`, `url`, and `email`.
    */
-  static registerPreset(name: string, match: Match) {
-    if (typeof name !== "string" || !name) {
-      throw new TypeError("Expecting non-empty string for preset name.");
+  static registerPreset(type: string, match: Match) {
+    if (typeof type !== "string" || !type) {
+      throw new TypeError("Expecting non-empty string for preset type.");
     }
 
     if (!Match.is(match)) {
       throw new TypeError("Expecting a string, regexp or function for preset match.");
     }
 
-    Parser.presets.set(name, match);
+    Parser.presets.set(type, match);
   }
 
   rules: Rule[] = [];
 
-  /** Add a rule to this parser. A rule consists of a match and optionally a replace. */
-  addRule(match: Match, replace?: Replace) {
+  /** Add a rule to this parser. A rule consists of a match and optionally, a replace and type. */
+  addRule(match: Match, replace?: Replace, type?: string): this;
+  /** Add a rule object to this parser. */
+  addRule(rule: Rule): this;
+
+  addRule(match: Match | Rule, replace?: Replace, type?: string) {
+    if (Rule.is(match)) {
+      this.rules.push(match);
+      return this;
+    }
+
     if (!Match.is(match)) {
       throw new TypeError("Expecting string, regex, or function for match.");
     }
@@ -81,7 +109,7 @@ export class Parser {
       throw new TypeError("Expecting string or function for replace.");
     }
 
-    this.rules.push({ match, replace });
+    this.rules.push({ match, type, replace });
     return this;
   }
 
@@ -89,43 +117,45 @@ export class Parser {
    * Add a registered global preset rule within this parser and give it a replace. The preset must first be registered
    * using `Parser.registerPreset()` before it can be used with this method.
    */
-  addPreset(name: string, replace?: Replace) {
-    const match = Parser.presets.get(name);
-    if (!match) throw new Error(`Preset '${name}' hasn't been registered on Parser.`);
+  addPreset(type: string, replace?: Replace) {
+    const match = Parser.presets.get(type);
+    if (!match) throw new Error(`Preset '${type}' hasn't been registered on Parser.`);
 
-    this.rules.push({ match, replace });
+    this.rules.push({ match, type, replace });
     return this;
   }
 
-  private _replace(replace: Replace | undefined, str: string, groups?: string[]): Node {
-    let node: Node | string;
+  private _replace(str: string, opts: { defaultType?: string; replace?: Replace; groups?: string[] } = {}): Node {
+    const { defaultType = "text", replace, groups } = opts;
 
-    switch (typeof replace) {
-      case "function":
-        node = replace(str, ...(groups || []));
-        break;
-      case "string":
-        node = replace;
-        break;
-      default:
-        node = str;
-        break;
+    let value: Partial<Node> | string;
+    if (typeof replace === "function") {
+      value = replace(str, ...(groups || []));
+    } else if (typeof replace === "string") {
+      value = replace;
+    } else {
+      value = str;
     }
 
-    if (typeof node === "string") {
-      node = { type: "text", text: node };
+    if (typeof value === "string") {
+      const node: Node = { type: defaultType, text: value };
       if (groups) node.groups = groups.slice(0);
+      return node;
     }
 
-    return node;
+    // in case the user is returning some kind of custom object
+    if (Node.is(value)) return value;
+
+    return { type: defaultType, text: str, ...value };
   }
 
   private _toTree(str: string) {
     const tree: Array<Node | string> = [];
     if (!str) return tree;
 
-    for (const { match, replace } of this.rules) {
+    for (const { match, type: defaultType, replace } of this.rules) {
       let m = typeof match === "function" ? match(str) : match;
+      const opts = { replace, defaultType };
 
       if (typeof m === "string") {
         if (str.indexOf(m) < 0) continue;
@@ -134,7 +164,7 @@ export class Parser {
           i;
         while ((i = str.indexOf(m, si)) > -1) {
           tree.push(str.substring(si, i));
-          tree.push(this._replace(replace, str.substr(i, m.length)));
+          tree.push(this._replace(str.substr(i, m.length), opts));
           si = i + m.length;
         }
 
@@ -150,7 +180,7 @@ export class Parser {
 
           if (index < si) break;
           tree.push(str.substring(si, index));
-          tree.push(this._replace(replace, str.substr(index, length)));
+          tree.push(this._replace(str.substr(index, length), opts));
           si = index + length;
         }
 
@@ -163,7 +193,7 @@ export class Parser {
         while (rmatch != null) {
           tree.push(str.substring(i, rmatch.index));
           const substr = str.substr(rmatch.index, rmatch[0].length);
-          tree.push(this._replace(replace, substr, Array.from(rmatch).slice(1)));
+          tree.push(this._replace(substr, { ...opts, groups: Array.from(rmatch).slice(1) }));
           i = rmatch.index + rmatch[0].length;
 
           rmatch = (m.flags || "").indexOf("g") >= 0 ? m.exec(str) : null;
@@ -202,10 +232,9 @@ export class Parser {
   }
 
   /**
-   * Returns a parsed string with all matches replaced.
+   * Returns a string derived from the text property on a list of nodes.
    */
-  render(str: string) {
-    const tree = this.toTree(str);
+  static renderTree(tree: Node[]) {
     let result = "";
 
     for (const node of tree) {
@@ -215,6 +244,13 @@ export class Parser {
     }
 
     return result;
+  }
+
+  /**
+   * Returns a parsed string with all matches replaced.
+   */
+  render(str: string) {
+    return Parser.renderTree(this.toTree(str));
   }
 }
 
