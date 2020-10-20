@@ -1,3 +1,4 @@
 breaking:
   - Rewritten in TypeScript. API remains largely the same.
   - Removed the deprecated method `parse()`.
+  - Dropped support for all Node versions below 10.
