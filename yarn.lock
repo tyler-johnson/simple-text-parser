@@ -654,7 +654,7 @@
     lodash "^4.17.15"
     toml "^3.0.0"
 
-"@pagedip/tool-autorelease@^3.9.3":
+"@pagedip/tool-autorelease@^3.9.2":
   version "3.9.3"
   resolved "https://npm.pkg.github.com/download/@pagedip/tool-autorelease/3.9.3/5df7579960cba8bf08241730f2efc26082ddad6944ac3cf00624ab6aea4bc001#be971de192bdf72dfcd4f872ffba14af9dfe3774"
   integrity sha512-3LosWvj50zz+GJv7iKqq+KrnfU/YcsZ420ZekTmL+GhFRr9AyIzDtUNXf+5cP9NsyDGSlcSDbFmX2kSHAyPUBg==
