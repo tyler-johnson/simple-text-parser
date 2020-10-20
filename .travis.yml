@@ -17,7 +17,7 @@ stages:
   - name: test
     if: type = pull_request
   - name: release
-    if: "type = pull_request OR branch = master"
+    if: type = pull_request OR branch = master
 jobs:
   include:
     - stage: test
@@ -29,8 +29,7 @@ jobs:
       node_js: 10
       script: yarn test
     - stage: release
-      script:
-        - yarn autorelease --expanded
+      script: yarn autorelease --expanded
 branches:
   only:
     - master
