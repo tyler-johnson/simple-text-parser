@@ -34,7 +34,7 @@ Let's start by defining a parsing rule. Say we want to parse some text for hash 
 // Define a rule using a regular expression
 parser.addRule(/\#[\S]+/gi, function (tag) {
   // Return the tag minus the `#` and surrond with html tags
-  return '<span class="tag">' + tag.substr(1) + "</span>";
+  return `<span class="tag">${tag.substr(1)}</span>`;
 });
 ```
 
