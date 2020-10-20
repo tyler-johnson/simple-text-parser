@@ -1,0 +1,37 @@
+os: linux
+dist: xenial
+language: node_js
+node_js:
+  - 14
+env:
+  - NODE_ENV=development
+before_install:
+  # update yarn and npm
+  - npm i npm -g
+  - npm i yarn -g
+  - echo "npm $(npm -v)" && echo "yarn $(yarn -v)"
+  # authenticate the registry
+  - npm config set "@pagedip:registry" "https://npm.pkg.github.com/"
+  - npm config set "//npm.pkg.github.com/:_authToken" "$GH_TOKEN"
+stages:
+  - name: test
+    if: type = pull_request
+  - name: release
+    if: type = pull_request OR branch = master
+jobs:
+  include:
+    - stage: test
+      script: yarn test
+    - stage: test
+      node_js: 12
+      script: yarn test
+    - stage: test
+      node_js: 10
+      script: yarn test
+    - stage: release
+      script: yarn autorelease --expanded
+branches:
+  only:
+    - master
+cache:
+  yarn: true

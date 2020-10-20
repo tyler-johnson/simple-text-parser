@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "importHelpers": true,
+    "declaration": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "types": ["node", "jest"],
+    "lib": ["esnext", "dom"],
+    "incremental": true
+  }
+}

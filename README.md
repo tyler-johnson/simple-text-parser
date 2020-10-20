@@ -1,39 +1,44 @@
 # Simple Text Parser
 
-This is a very simple text parser written in Javascript. It's based around strings and regular expressions so it's highly customizable, synchronous and relatively fast.
+This is a very simple text parser written in TypeScript. It's based around strings and regular expressions so it's highly customizable, synchronous, and relatively fast.
 
 ## Install
 
-Install via NPM and use it in your package of choice. This package is compatible with the browser, but it must be built with Browserify or another JS bundler that supports node modules.
+Install via NPM/Yarn and use it in your package of choice. This package is compatible with the browser.
 
-```sh
-npm i simple-text-parser --save
+```bash
+npm i simple-text-parser
+```
+
+```bash
+yarn add simple-text-parser
 ```
 
 ## Usage
 
-The STP package reveals a `Parser` class. Create a new instance from it.
+The simple-text-parser package exports a `Parser` class. Create a new instance from it.
 
 ```javascript
-var Parser = require("simple-text-parser");
-var parser = new Parser();
+import { Parser } from "simple-text-parser";
+
+const parser = new Parser();
 ```
 
-## Examples
+## Example
 
-STP works by taking a plain text string and searching it for substrings and regular expressions. When a `match` is found, it is parsed out into a tree and replaced.
+This library works by taking a plain text string and searching it for substrings and regular expressions. When a `match` is found, it is parsed out into a tree and replaced.
 
 Let's start by defining a parsing rule. Say we want to parse some text for hash tags (`#iamahashtag`) and replace it with some custom html:
 
 ```javascript
 // Define a rule using a regular expression
-parser.addRule(/\#[\S]+/ig, function(tag) {
-	// Return the tag minus the `#` and surrond with html tags
-	return "<span class=\"tag\">" + tag.substr(1) + "</span>";
+parser.addRule(/\#[\S]+/gi, function (tag) {
+  // Return the tag minus the `#` and surrond with html tags
+  return '<span class="tag">' + tag.substr(1) + "</span>";
 });
 ```
 
-Now lets render some text using our rule and output the resulting string:
+Now let's render some text using our rule and output the resulting string:
 
 ```javascript
 parser.render("Some text #iamahashtag foo bar.");
@@ -45,7 +50,7 @@ becomes...
 Some text <span class="tag">iamahashtag</span> foo bar.
 ```
 
-Of course we can also parse some text into an object tree for more custom handling and to retrieve the parsed data:
+Of course we can also parse some text into an array of nodes for more custom handling and to retrieve the parsed data:
 
 ```javascript
 parser.toTree("Some text #iamahashtag foo bar.");
@@ -54,10 +59,11 @@ parser.toTree("Some text #iamahashtag foo bar.");
 outputs...
 
 ```javascript
-[ { type: 'text', text: 'Some text ' },
-  { type: 'text',
-    text: '<span class="tag">iamahashtag</span>' },
-  { type: 'text', text: ' foo bar.' } ]
+[
+  { type: "text", text: "Some text " },
+  { type: "text", text: '<span class="tag">iamahashtag</span>' },
+  { type: "text", text: " foo bar." },
+];
 ```
 
 Of course a `type` of `text` on a tag isn't helpful when specifically trying to parse out tags. Let's modify our parsing rule to be more specific:
@@ -65,12 +71,12 @@ Of course a `type` of `text` on a tag isn't helpful when specifically trying to 
 ```javascript
 // Define a rule using a regular expression
 // RegExp capture groups are passed as extra arguments
-parser.addRule(/\#([\S]+)/ig, function(tag, clean_tag) {
-	// create the replacement text with surrounding html tags
-	var text = "<span class=\"tag\">" + clean_tag + "</span>";
+parser.addRule(/\#([\S]+)/gi, function (tag, clean_tag) {
+  // create the replacement text with surrounding html tags
+  var text = '<span class="tag">' + clean_tag + "</span>";
 
-	// return an object describing this tag
-	return { type: "tag", text: text, tag: clean_tag };
+  // return a node describing this tag
+  return { type: "tag", text: text, tag: clean_tag };
 });
 ```
 
@@ -81,11 +87,15 @@ Some text <span class="tag">iamahashtag</span> foo bar.
 ```
 
 ```javascript
-[ { type: 'text', text: 'Some text ' },
-  { type: 'tag',
+[
+  { type: "text", text: "Some text " },
+  {
+    type: "tag",
     text: '<span class="tag">iamahashtag</span>',
-    tag: 'iamahashtag' },
-  { type: 'text', text: ' foo bar.' } ]
+    tag: "iamahashtag",
+  },
+  { type: "text", text: " foo bar." },
+];
 ```
 
 ## API Documentation
@@ -96,57 +106,57 @@ These methods can be called on objects returned from `new Parser()`.
 
 #### parser.addRule()
 
-Add a parsing rule.
+Add a rule to this parser. A rule consists of a match and optionally a replace.
 
-```javascript
-parser.addRule(match, replace);
+```
+addRule(match: Match, replace?: Replace): this
 ```
 
-* `match` (String, RegExp, Function) - The search to perform. If a string, it is searched for exactly. If a regular expression, a simple match is performed and any capture groups are passed to `replace`. If a function, it is called with a single argument, the full string passed to `render()`, and should return an array with an index and length of the match.
-* `replace` (String, Function, Undefined) - Replaces the match when found. If a string, it replaces exactly. Functions are called with matched substrings and possibly any regular expression capture groups. The function should return a string to replace with or an object representing a tree node. This argument is optional and when not provided the matched content is preserved.
+- `match` - The search to perform. If a string, it is searched for exactly. If a regular expression, a simple match is performed and any capture groups are passed to `replace`. If a function, it is called with a single argument, the full string passed to `render()`, and should return an array with an index and length of the match.
+- `replace` - Replaces the match when found. If a string, it replaces exactly. Functions are called with matched substrings and possibly any regular expression capture groups. The function should return a string to replace with or an object representing a tree node. This argument is optional and when not provided the matched content is preserved.
 
 #### parser.addPreset()
 
-Registers a preset rule within the instance.
+Add a registered global preset rule within this parser and give it a replace. The preset must first be registered using `Parser.registerPreset()` before it can be used with this method.
 
-```javascript
-parser.addPreset(name, replace);
+```
+addPreset(name: string, replace?: Replace): this
 ```
 
-* `name` (String) - The string id of the preset as declared by `Parser.registerPreset()`. This will be the node's `type` when returned by `toTree()`.
-* `replace` (String, Function) - Replaces the match when found. Same as the `replace` in `addRule()`.
+- `name` - The string id of the preset as declared by `Parser.registerPreset()`. This will be the node's `type` when returned by `toTree()`.
+- `replace` - Replaces the match when found. Same as the `replace` in `addRule()`.
 
 #### parser.toTree()
 
-Returns the parsed string as an array of objects describing each part. Every part includes at least a `type` and `text` key. `type` defaults to `"text"` but could be any value as returned by a `replace`. The `text` key is used to replaced the matched string by `render()`.
+Returns the parsed string as an array of nodes. Every node includes at least `type` and `text` properties. `type` defaults to `"text"` but could be any value as returned by `replace`. The `text` key is used to replaced the matched string by `render()`.
 
-```javascript
-parser.toTree(str);
+```
+toTree(str: string): Node[]
 ```
 
-* `str` (String) - A plain text string to parse.
+- `str` - A plain text string to parse.
 
 #### parser.render()
 
-Returns a parsed string with all rules replaced.
+Returns a parsed string with all matches replaced.
 
-```javascript
-parser.render(str);
+```
+render(str: string): string
 ```
 
-* `str` (String) - A plain text string to parse and replace.
+- `str` - A plain text string to parse and replace.
 
 ### Class Methods
 
-These methods can be called directly from the `Parser` class.
+These methods can be called from the `Parser` class.
 
 #### Parser.registerPreset()
 
-Register a new preset rule. This allows STP to be extended globally. Presets don't handle the replacing, only the matching. STP comes with three pre-included presets: `tag`, `url`, and `email`.
+Register a new global preset rule. Presets don't handle the replacing, only the matching. There are three pre-included presets: `tag`, `url`, and `email`.
 
-```javascript
-Parser.registerPreset(name, match);
+```
+static registerPreset(name: string, match: Match): void
 ```
 
-* `name` (String) - The string id of the preset. This will become the node's `type` when returned by `toTree()`.
-* `match` (String, RegExp, Function) - The search to perform. Same as the `replace` in `addRule()`.
+- `name` - The string id of the preset. This will become the node's `type` when returned by `toTree()`.
+- `match` - The search to perform. Same as the `replace` in `addRule()`.
