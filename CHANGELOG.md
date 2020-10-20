@@ -1,3 +1,20 @@
+## [2.1.0](https://github.com/tyler-johnson/simple-text-parser/tree/release/2/) - Oct 20, 2020
+
+### Features
+- Added renderTree static method.
+- addRule method takes a full rule object, or a 3rd argument for type.
+
+### Fixes
+- Corrected regression in which nodes from presets did not have the correct type.
+
+### Commits
+[`6504fe5b..75d493dc`](https://github.com/tyler-johnson/simple-text-parser/compare/6504fe5b4189b51b35346d4eca85338fe1829689..75d493dc96a35550866bcfe8ec1f7c34f8ff4e3f)
+- [`75d493dc`](https://github.com/tyler-johnson/simple-text-parser/commit/75d493dc96a35550866bcfe8ec1f7c34f8ff4e3f) Merge pull request #7 from tyler-johnson/develop
+- [`1987a4ed`](https://github.com/tyler-johnson/simple-text-parser/commit/1987a4ed4cb88f612a4de9e0bd09c7c46d37c86a) improved example
+- [`915c0c32`](https://github.com/tyler-johnson/simple-text-parser/commit/915c0c32c11ce83eee873f27ea5c3978f5e5529f) improvements
+- [`37e157de`](https://github.com/tyler-johnson/simple-text-parser/commit/37e157def9b2f258fb77a2b414a12244f5e5ce6a) update dot-prop in yarn.lock
+
+
 ## [2.0.0](https://github.com/tyler-johnson/simple-text-parser/tree/release/1/) - Oct 20, 2020
 
 ### Breaking
