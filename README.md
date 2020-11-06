@@ -4,7 +4,7 @@ This is a very simple text parser written in TypeScript. It's based around strin
 
 ## Install
 
-Install via NPM/Yarn and use it in your package of choice. This package is compatible with the browser.
+Install via NPM/Yarn.
 
 ```bash
 npm i simple-text-parser
@@ -108,7 +108,7 @@ parser.addPreset("tag", function (tag, clean_tag) {
 });
 ```
 
-There are actually 3 included presets: tag, url, and email. You can also add your own presets to extend the parser globally by using `Parser.registerPreset()`.
+There are 3 included presets: tag, url, and email. You can also add your own presets to extend the parser globally by using `Parser.registerPreset()`.
 
 ## API Documentation
 

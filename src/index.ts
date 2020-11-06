@@ -1,5 +1,3 @@
-import { types } from "util";
-
 export interface Node {
   type: string;
   text: string;
@@ -27,7 +25,7 @@ export namespace Match {
   export type Function = (str: string) => string | RegExp | Location | Location[];
 
   export function is(val: any): val is Match {
-    return typeof val === "string" || typeof val === "function" || types.isRegExp(val);
+    return typeof val === "string" || typeof val === "function" || isRegExp(val);
   }
 }
 
@@ -57,6 +55,11 @@ export namespace Rule {
       typeof r !== "string" // b/c holy cow a string actually fits the rule type
     );
   }
+}
+
+// isRegExp adopted from sindresorhus/is-regexp
+function isRegExp(value: any): value is RegExp {
+  return Object.prototype.toString.call(value) === "[object RegExp]";
 }
 
 export class Parser {
@@ -185,7 +188,7 @@ export class Parser {
         }
 
         tree.push(str.substr(si));
-      } else if (types.isRegExp(m)) {
+      } else if (isRegExp(m)) {
         let rmatch = m.exec(str);
         if (!rmatch) continue;
 
