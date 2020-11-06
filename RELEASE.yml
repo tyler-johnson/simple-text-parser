@@ -1,4 +1,5 @@
 breaking:
 features:
 fixes:
+  - Removed 'util' dependency so this works properly in all JS environments.
 chores:
