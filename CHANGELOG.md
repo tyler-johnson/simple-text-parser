@@ -1,3 +1,14 @@
+## [2.1.1](https://github.com/tyler-johnson/simple-text-parser/tree/release/3/) - Nov 7, 2020
+
+### Fixes
+- Removed 'util' dependency so this works properly in all JS environments.
+
+### Commits
+[`0e1acff7..a14e680e`](https://github.com/tyler-johnson/simple-text-parser/compare/0e1acff7ca6388795e6079c1bb2721f7e6442b03..a14e680e02e861442301ffbe996e4a857d698286)
+- [`a14e680e`](https://github.com/tyler-johnson/simple-text-parser/commit/a14e680e02e861442301ffbe996e4a857d698286) Merge pull request #8 from tyler-johnson/develop
+- [`73900849`](https://github.com/tyler-johnson/simple-text-parser/commit/73900849c748ad75df7ba62b5f1c5a8470c0ff89) remove uitl dep
+
+
 ## [2.1.0](https://github.com/tyler-johnson/simple-text-parser/tree/release/2/) - Oct 20, 2020
 
 ### Features
